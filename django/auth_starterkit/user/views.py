@@ -29,9 +29,18 @@ class Nonce(APIView):
             {'nonce': user.nonce, 'has_signed_up': bool(user.email) and bool(user.name)})
 
 
-class UserView(APIView):
+class CurrentUserView(APIView):
     def get(self, request):
         if request.is_logged_in:
-            setLastViewed(request, request.current_user)
             return JsonResponse(UserSerializer(request.current_user).data)
+        return HttpResponse('Unauthorized', status=401)
+
+
+class UserView(APIView):
+    def post(self, request, public_address):
+        if request.is_logged_in and request.current_user.public_address == public_address.lower():
+            user = request.current_user
+            user.name = request.data.get('name', '')
+            user.save()
+            return JsonResponse(UserSerializer(user).data)
         return HttpResponse('Unauthorized', status=401)
