@@ -1,0 +1,4 @@
+Django==2.1.2
+web3==4.7.2
+psycopg2
+djangorestframework==3.7.7

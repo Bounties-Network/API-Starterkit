@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: main
+    volumes:
+      - starter_psql:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  starter_api:
+    build:
+      context: ./auth_starterkit
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - .env
+    command: bash -c "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:83"
+    volumes:
+      - ./auth_starterkit:/code
+    ports:
+      - "8000:83"
+    depends_on:
+      - db
+volumes:
+  starter_psql:
+    external: true
