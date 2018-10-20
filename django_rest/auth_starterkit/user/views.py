@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from user.backend import authenticate, login, logout
 from django.http import JsonResponse, HttpResponse
+from user.models import User
 from user.serializers import UserSerializer
 
 
@@ -36,10 +37,10 @@ class CurrentUserView(APIView):
 
 
 class UserView(APIView):
-    def post(self, request, public_address):
+    def put(self, request, public_address):
         if request.is_logged_in and request.current_user.public_address == public_address.lower():
             user = request.current_user
-            user.name = request.data.get('name', '')
+            user.username = request.data.get('username', '')
             user.save()
             return JsonResponse(UserSerializer(user).data)
         return HttpResponse('Unauthorized', status=401)
