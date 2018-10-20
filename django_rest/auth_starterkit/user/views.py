@@ -25,8 +25,7 @@ class Nonce(APIView):
     def get(self, request, public_address=''):
         user = User.objects.get_or_create(
             public_address=public_address.lower())[0]
-        return JsonResponse(
-            {'nonce': user.nonce, 'has_signed_up': bool(user.email) and bool(user.name)})
+        return JsonResponse({'nonce': user.nonce })
 
 
 class CurrentUserView(APIView):
