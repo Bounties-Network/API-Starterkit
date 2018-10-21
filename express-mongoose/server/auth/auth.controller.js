@@ -44,7 +44,7 @@ function login(req, res, next) {
         .then((savedUser) => {
           if (calculatedPublicAddress.toLowerCase() === publicAddress) {
             if (req.url.includes('jwt')) {
-              const token = jwt.sign({ publicAddress: savedUser.public_address }, config.jwtSecret);
+              const token = jwt.sign({ publicAddress: savedUser.public_address }, config.jwtSecret, { expiresIn: '14 days' });
               return res.json({ user: savedUser, token });
             }
             req.session.currentUser = savedUser.public_address;
