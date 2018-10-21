@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
-from user.backend import authenticate, login, logout
+from user.backend import authenticate, login, loginJWT, logout
 from django.http import JsonResponse, HttpResponse
+import json
 from user.models import User
 from user.serializers import UserSerializer
 
@@ -14,6 +15,20 @@ class Login(APIView):
             return HttpResponse('Unauthorized', status=401)
         login(request, user)
         return JsonResponse(UserSerializer(user).data)
+
+
+class LoginJWT(APIView):
+    def post(self, request):
+        public_address = request.data.get('public_address', '')
+        signature = request.data.get('signature', '')
+        user = authenticate(public_address=public_address, signature=signature)
+        if not user:
+            return HttpResponse('Unauthorized', status=401)
+        jwt_token = loginJWT(request, user)
+        return JsonResponse({
+            'user': UserSerializer(user).data,
+            'token': jwt_token.decode('utf-8')
+        })
 
 
 class Logout(APIView):

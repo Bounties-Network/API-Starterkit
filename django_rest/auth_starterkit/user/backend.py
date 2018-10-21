@@ -3,6 +3,10 @@ from user.models import User
 # Best approach for now with defunct until other forms are more stable
 from eth_account.messages import defunct_hash_message
 from web3.auto import w3
+import datetime
+from django.conf import settings
+import jwt
+
 
 def authenticate(public_address='', signature=''):
     try:
@@ -23,6 +27,11 @@ def authenticate(public_address='', signature=''):
 
 def login(request, user):
     request.session['public_address'] = user.public_address.lower()
+
+
+def loginJWT(request, user):
+    expiration = datetime.datetime.utcnow() + datetime.timedelta(weeks=2)
+    return jwt.encode({ 'public_address': user.public_address, 'exp': expiration }, settings.SECRET_KEY, algorithm="HS256")
 
 
 def logout(request):
