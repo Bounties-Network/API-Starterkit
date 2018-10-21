@@ -8,7 +8,7 @@ class AuthenticationMiddleware(MiddlewareMixin):
     def process_request(self, request):
         public_address = request.session.get('public_address', None)
         if not public_address:
-            jwt_token = request.META.get('HTTP_AUTHORIZATION', '')
+            jwt_token = request.META.get('HTTP_AUTHORIZATION', None)
             if jwt_token:
                 try:
                     payload = jwt.decode(jwt_token, settings.SECRET_KEY)
