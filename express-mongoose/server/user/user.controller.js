@@ -4,7 +4,6 @@ const APIError = require('../helpers/APIError');
 /**
  * Update existing user
  * @property {string} req.body.username - The username of user.
- * @property {string} req.body.mobileNumber - The mobileNumber of user.
  * @returns {User}
  */
 function update(req, res, next) {

@@ -6,7 +6,6 @@ const userCtrl = require('./user.controller');
 const router = express.Router(); // eslint-disable-line new-cap
 
 router.route('/:public_address')
-  /** PUT /api/users/:userId - Update user */
   .put(validate(paramValidation.updateUser), userCtrl.update);
 
 module.exports = router;

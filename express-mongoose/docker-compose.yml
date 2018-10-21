@@ -1,7 +1,7 @@
 version: '2'
 
 services:
-  express-mongoose-es6-rest-api:
+  express-mongoose-auth:
     build:
       context: .
     volumes:
@@ -24,8 +24,8 @@ services:
 
     # Overwrite any env var defined in .env file (if required)
     environment:
-      - MONGO_HOST=mongodb://mongo/express-mongoose-es6-rest-api-development
-      - DEBUG=express-mongoose-es6-rest-api:*
+      - MONGO_HOST=mongodb://mongo/express-mongoose-auth
+      - DEBUG=express-mongoose-auth:*
 
     # Link to containers in another service.
     # Links also express dependency between services in the same way as depends_on,
@@ -36,3 +36,10 @@ services:
     image: "mongo:3.4"
     ports:
       - "27017:27017"
+    volumes:
+      - 'starter_mongo:/data/db'
+volumes:
+  starter_mongo:
+    external: true
+
+
