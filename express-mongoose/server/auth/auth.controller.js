@@ -3,6 +3,8 @@ const APIError = require('../helpers/APIError');
 const User = require('../user/user.model');
 const uuidv4 = require('uuid/v4');
 const Web3 = require('web3');
+const config = require('../../config/config');
+const jwt = require('jsonwebtoken');
 
 const web3 = new Web3(Web3.givenProvider);
 
@@ -41,6 +43,10 @@ function login(req, res, next) {
       user.save()
         .then((savedUser) => {
           if (calculatedPublicAddress.toLowerCase() === publicAddress) {
+            if (req.url.includes('jwt')) {
+              const token = jwt.sign({ publicAddress: savedUser.public_address }, config.jwtSecret);
+              return res.json({ user: savedUser, token });
+            }
             req.session.currentUser = savedUser.public_address;
             return res.json(savedUser);
           }

@@ -8,6 +8,9 @@ const router = express.Router(); // eslint-disable-line new-cap
 router.route('/login')
   .post(validate(paramValidation.login), authCtrl.login);
 
+router.route('/login/jwt')
+  .post(validate(paramValidation.login), authCtrl.login);
+
 router.route('/logout')
   .get(authCtrl.logout);
 

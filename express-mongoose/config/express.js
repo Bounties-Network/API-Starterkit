@@ -16,6 +16,7 @@ const routes = require('../index.route');
 const config = require('./config');
 const APIError = require('../server/helpers/APIError');
 const User = require('../server/user/user.model');
+const jwt = require('jsonwebtoken');
 
 const initiateApp = (connection) => {
   const app = express();
@@ -55,7 +56,15 @@ const initiateApp = (connection) => {
   }
 
   app.use((req, res, next) => {
-    const publicAddress = req.session.currentUser;
+    let publicAddress = req.session.currentUser;
+    const token = req.header('authentication');
+    if (token) {
+      try {
+        const decoded = jwt.verify(token, config.jwtSecret);
+        publicAddress = decoded.publicAddress;
+      } catch (err) {}
+    }
+
     if (!publicAddress) {
       return next();
     }
